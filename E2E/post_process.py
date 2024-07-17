@@ -15,8 +15,8 @@ THRESHOLD = {"person":1, "rider":1, "motorcycle":1, "bicycle":1,
              "car":2, "truck":2, "bus":2, "train":2}
 MIN_SIZE = {"person":20, "rider":20, "motorcycle":20, "bicycle":20,
             "car":25, "truck":45, "bus":45, "train":45}
-SELEM = {1: (np.ones((3,3))).astype(np.bool),
-         2: (np.ones((5,5))).astype(np.bool)}
+SELEM = {1: (np.ones((3,3))).astype(bool),
+         2: (np.ones((5,5))).astype(bool)}
 
 def watershed_cut(depthImage, ssMask):
     ssMask = ssMask.astype(np.int32)

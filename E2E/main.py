@@ -4,7 +4,7 @@ import tensorflow as tf
 from forward import forward_model
 from train import train_model
 
-tf.set_random_seed(0)
+tf.random.set_seed(0)
 
 if __name__ == "__main__":
     outputChannels = 16

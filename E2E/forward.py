@@ -15,7 +15,7 @@ def forward_model(model, feeder, outputSavePath, batchSize=1):
         keepProb = tf.placeholder("float")
 
         with tf.name_scope("model_builder"):
-            print "attempting to build model"
+            print ("attempting to build model")
             model.build(tfBatchImages, tfBatchSS, tfBatchSSMask, keepProb=keepProb)
             print "built the model"
 

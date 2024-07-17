@@ -3,6 +3,8 @@ import sys
 from loss_function import *
 import math
 import time
+import tensorflow as tf
+import numpy as np
 
 def train_model(model, outputChannels, learningRate, trainFeeder, valFeeder,
                 modelSavePath=None, savePrefix=None, initialIteration=1, batchSize=1):
@@ -15,9 +17,9 @@ def train_model(model, outputChannels, learningRate, trainFeeder, valFeeder,
         keepProb = tf.placeholder("float")
 
         with tf.name_scope("model_builder"):
-            print "attempting to build model"
+            print ("attempting to build model")
             model.build(tfBatchImages, tfBatchSS, tfBatchSSMask, keepProb=keepProb)
-            print "built the model"
+            print ("built the model")
         sys.stdout.flush()
 
         loss = modelTotalLoss(pred=model.outputData, gt=tfBatchGT, weight=tfBatchWeight, ss=tfBatchSS, outputChannels=outputChannels)
@@ -25,17 +27,17 @@ def train_model(model, outputChannels, learningRate, trainFeeder, valFeeder,
         numPredicted = countTotal(ss=tfBatchSS)
         numCorrect = countCorrect(pred=model.outputData, gt=tfBatchGT, ss=tfBatchSS, k=1, outputChannels=outputChannels)
 
-        print "setting adam optimizer"
+        print ("setting adam optimizer")
         sys.stdout.flush()
 
         train_op = tf.train.AdamOptimizer(learning_rate=learningRate).minimize(loss=loss)
 
         init = tf.initialize_all_variables()
-        print "attempting to run init"
+        print ("attempting to run init")
         sys.stdout.flush()
 
         sess.run(init)
-        print "completed init"
+        print ("completed init")
         sys.stdout.flush()
 
         iteration = initialIteration
@@ -64,12 +66,12 @@ def train_model(model, outputChannels, learningRate, trainFeeder, valFeeder,
                 totalCorrect += batchCorrect
 
             if np.isnan(np.mean(batchLosses)):
-                print "LOSS RETURNED NaN"
+                print ("LOSS RETURNED NaN")
                 sys.stdout.flush()
                 return 1
 
-            print "%s Itr: %d - val loss: %.6f, correct: %.6f" % (time.strftime("%H:%M:%S"),
-            iteration, float(np.mean(batchLosses)), totalCorrect / totalPredicted)
+            print ("%s Itr: %d - val loss: %.6f, correct: %.6f" % (time.strftime("%H:%M:%S"),
+            iteration, float(np.mean(batchLosses)), totalCorrect / totalPredicted))
             sys.stdout.flush()
 
             if (iteration > 0 and iteration % 5 == 0) or checkSaveFlag(modelSavePath):
